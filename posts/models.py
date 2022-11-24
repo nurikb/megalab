@@ -1,13 +1,15 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 
 
-User = get_user_model()
+class Tag(models.Model):
+    name = models.CharField(max_length=255)
 
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    author = models.CharField(max_length=100)
+    tag = models.ForeignKey(Tag, max_length=50, null=True, on_delete=models.SET_NULL, related_name="tag")
+    date = models.DateField(auto_now_add=True, null=True)
 
 
 class Content(models.Model):
