@@ -1,6 +1,6 @@
 from django.db import models
 
-from core import settings
+from core.settings import AUTH_USER_MODEL
 
 
 class Tag(models.Model):
@@ -9,7 +9,11 @@ class Tag(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
-    author = models.CharField(max_length=100)
+    author = models.ForeignKey(
+        AUTH_USER_MODEL,
+        related_name="post_user",
+        on_delete=models.CASCADE
+    )
     tag = models.ForeignKey(
         Tag,
         max_length=50,
@@ -18,13 +22,19 @@ class Post(models.Model):
         related_name="tag"
     )
     date = models.DateField(auto_now_add=True)
-    image = models.ImageField(verbose_name="Картина", null=True)
+    image = models.ImageField(
+        verbose_name="Картина",
+        null=True,
+    )
     text = models.TextField()
+
+    def __str__(self):
+        return self.title
 
 
 class PostLikes(models.Model):
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        AUTH_USER_MODEL,
         related_name="user_like",
         on_delete=models.CASCADE
     )
@@ -38,11 +48,12 @@ class PostLikes(models.Model):
         return f"{self.user}-{self.post}"
 
 
-class Content(models.Model):
-    type = models.CharField(max_length=10)
-    value = models.CharField(max_length=255)
-    post = models.ForeignKey(
-        Post,
-        related_name="content",
-        on_delete=models.CASCADE
-    )
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_comment")
+    user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="user_comment")
+    text = models.TextField()
+    date = models.DateTimeField(auto_now_add=True)
+    parent = models.ForeignKey("self", on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return f"{self.user}"
