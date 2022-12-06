@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 
 from rest_framework.response import Response
-from rest_framework import generics
+from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
@@ -30,9 +30,9 @@ class LoginAPIView(APIView):
         return Response({'token': token.key})
 
 
-class RegistrationAPIView(generics.CreateAPIView):
+class RegistrationViewSet(viewsets.ModelViewSet):
 
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsCreationOrIsAuthenticated,)
+    permission_classes = (AllowAny, )
+    http_method_names = ['post']
