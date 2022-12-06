@@ -50,7 +50,7 @@ class ChildCommentSerializer(CommentSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     tag = serializers.CharField(source="tag.name")
-    is_liked = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField(read_only=True)
     comment = serializers.SerializerMethodField()
 
     class Meta:
