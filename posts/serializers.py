@@ -70,7 +70,7 @@ class PostSerializer(serializers.ModelSerializer):
         return PostLikes.objects.filter(user=user, post=obj).exists()
 
     def get_comment(self, obj):
-        comment = Comment.objects.filter(parent=None).order_by("date")
+        comment = Comment.objects.filter(parent=None, post=obj).order_by("date")
         return CommentSerializer(instance=comment, many=True).data
 
     def create(self, validated_data):
