@@ -18,7 +18,7 @@ class CommentSerializer(serializers.ModelSerializer):
         write_only=True
     )
     child = serializers.SerializerMethodField()
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Comment
