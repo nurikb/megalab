@@ -22,7 +22,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ("user", "post", "text", "parent", "child")
+        fields = ("id", "user", "post", "text", "parent", "child")
 
     def validate_parent(self, value):
         if value.parent is not None:
@@ -45,7 +45,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class ChildCommentSerializer(CommentSerializer):
     class Meta(CommentSerializer.Meta):
-        fields = ("user", "text", "parent")
+        fields = ("id", "user", "text", "parent")
 
 
 class PostSerializer(serializers.ModelSerializer):

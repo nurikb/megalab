@@ -34,7 +34,7 @@ class LoginSerializer(serializers.Serializer):
                 msg = _('Unable to log in with provided credentials.')
                 raise serializers.ValidationError(msg, code='authorization')
         else:
-            msg = _('Must include "username" and "password".')
+            msg = _('Must include "nickname" and "password".')
             raise serializers.ValidationError(msg, code='authorization')
 
         attrs['user'] = user
@@ -49,12 +49,13 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'last_name', 'nickname', 'password', 'password2')
         extra_kwargs = {'password': {'write_only': True}}
 
-    # def validate
-
-    def create(self, validated_data):
-        password = validated_data.get('password')
-        password2 = validated_data.pop('password2')
+    def validate(self, data):
+        password = data.get('password')
+        password2 = data.pop('password2')
         if password != password2:
             raise serializers.ValidationError({'password': 'Passwords must match.'})
+        return data
+
+    def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
