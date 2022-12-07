@@ -5,12 +5,11 @@ from posts.models import Post
 
 class PostFilterSet(django_filters.FilterSet):
     tag = django_filters.CharFilter(field_name='tag', lookup_expr='name')
-    date = django_filters.CharFilter(field_name='date')
-    author = django_filters.CharFilter(field_name='author', lookup_expr='nickname')
+    like = django_filters.BooleanFilter(method="get_like_post")
 
-    # def tag_mark(self, queryset, name, value):
-    #     tag_post = queryset.objects.filter(tag__name=value)
-    #     return tag_post
+    def get_like_post(self, queryset, name, value):
+        if value is True:
+            like_post = Post.objects.filter
 
     class Meta:
         model = Post

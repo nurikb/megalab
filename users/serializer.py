@@ -1,5 +1,6 @@
-from django.contrib.auth import get_user_model, authenticate
+from django.contrib.auth import authenticate
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import password_validation
 
 from rest_framework import serializers
 
@@ -54,6 +55,7 @@ class UserSerializer(serializers.ModelSerializer):
         password2 = data.pop('password2')
         if password != password2:
             raise serializers.ValidationError({'password': 'Passwords must match.'})
+        password_validation.validate_password(password, self.instance)
         return data
 
     def create(self, validated_data):

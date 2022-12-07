@@ -24,7 +24,7 @@ class Post(models.Model):
         on_delete=models.SET_NULL,
         related_name="tag"
     )
-    date = models.DateField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(
         verbose_name="Картина",
         null=True,
