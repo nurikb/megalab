@@ -11,7 +11,7 @@ class TagAPIView(generics.ListAPIView):
     serializer_class = TagSerializer
 
 
-class PostViewSet(viewsets.ModelViewSet):
+class PostAPIView(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
@@ -21,15 +21,22 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return self.queryset.order_by("-date")
 
-    def get_serializer_context(self):
-        return {"user": self.request.user}
 
-
-class PostLikeViewSet(PostViewSet):
-    http_method_names = ['get']
+class PostLikeAPIView(PostAPIView):
 
     def get_queryset(self):
-        return self.queryset.filter(post_like__user=self.request.user)
+        return self.queryset.filter(post_like__user=self.request.user).order_by("-date")
+
+
+class UserPostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(author=self.request.user)
+
+    def get_serializer_context(self):
+        return {"user": self.request.user}
 
 
 class LikesAPIView(generics.CreateAPIView):

@@ -26,13 +26,14 @@ class Post(models.Model):
     )
     date = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(
+        upload_to="post_image",
         verbose_name="Картина",
         null=True,
     )
     text = models.TextField()
 
     def __str__(self):
-        return self.title
+        return f"{self.id}"
 
 
 class PostLikes(models.Model):
