@@ -1,6 +1,9 @@
-from rest_framework import viewsets, generics
+from rest_framework import viewsets, generics, status
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
+from rest_framework.views import APIView
+from rest_framework.response import Response
+
 from .filters import PostFilterSet
 from .models import Post, PostLike, Tag, Comment
 from .serializers import PostSerializer, LikePostSerializer, TagSerializer, CommentSerializer
@@ -27,20 +30,23 @@ class PostViewSet(viewsets.ModelViewSet):
         return {"user": self.request.user}
 
 
-class PostLikeViewSet(PostViewSet):
-    http_method_names = ["get"]
-
-    def get_queryset(self):
-        return self.queryset.filter(post_like__user=self.request.user).order_by("-date")
-
-
-class LikesAPIView(generics.CreateAPIView):
+class LikesAPIView(APIView):
     queryset = PostLike.objects.all()
     serializer_class = LikePostSerializer
 
-    def perform_create(self, serializer) -> None:
-        user = self.request.user
-        serializer.save(user=user)
+    def get(self, request):
+        like_post = Post.objects.filter(post_like__user=self.request.user).order_by("-date")
+        serializer = PostSerializer(like_post, many=True, context={"user": request.user})
+        return Response(serializer.data)
+
+    def post(self, request):
+        data = request.data
+        data.update({"user": request.user.id})
+        serializer = LikePostSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CommentAPIView(generics.CreateAPIView):
