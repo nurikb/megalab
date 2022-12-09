@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from posts.models import Post, Tag, PostLikes, Comment
+from posts.models import Post, Tag, PostLike, Comment
 from users.serializer import UserSerializer
 
 
@@ -67,7 +67,7 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_is_liked(self, obj):
         user = self.context.get("user")
-        return PostLikes.objects.filter(user=user, post=obj).exists()
+        return PostLike.objects.filter(user=user, post=obj).exists()
 
     def get_comment(self, obj):
         comment = Comment.objects.filter(parent=None, post=obj).order_by("date")
@@ -85,5 +85,5 @@ class PostSerializer(serializers.ModelSerializer):
 
 class LikePostSerializer(serializers.ModelSerializer):
     class Meta:
-        model = PostLikes
+        model = PostLike
         fields = ("post",)

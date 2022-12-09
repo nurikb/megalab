@@ -2,24 +2,22 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from posts.views import (
-    PostAPIView,
+    PostViewSet,
     LikesAPIView,
     TagAPIView,
     CommentAPIView,
-    PostLikeAPIView,
-    UserPostViewSet
+    PostLikeViewSet,
 )
 
 router = DefaultRouter()
 
-router.register("user-post", UserPostViewSet, basename="post"),
+router.register("post", PostViewSet, basename="post"),
 
 
 urlpatterns = [
     path('tag/', TagAPIView.as_view(), name="tag"),
     path('like/', LikesAPIView.as_view(), name="like"),
-    path('post/', PostAPIView.as_view()),
-    path('post-like/', PostLikeAPIView.as_view(), name="post_like"),
+    path('post-like/', PostLikeViewSet.as_view({"get": "list"}), name="post_like"),
     path('comment/', CommentAPIView.as_view(), name="comment")
 
 ]

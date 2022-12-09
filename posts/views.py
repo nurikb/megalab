@@ -2,7 +2,7 @@ from rest_framework import viewsets, generics
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from .filters import PostFilterSet
-from .models import Post, PostLikes, Tag, Comment
+from .models import Post, PostLike, Tag, Comment
 from .serializers import PostSerializer, LikePostSerializer, TagSerializer, CommentSerializer
 
 
@@ -11,7 +11,7 @@ class TagAPIView(generics.ListAPIView):
     serializer_class = TagSerializer
 
 
-class PostAPIView(generics.ListAPIView):
+class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
@@ -19,28 +19,23 @@ class PostAPIView(generics.ListAPIView):
     search_fields = ["title", "text"]
 
     def get_queryset(self):
+        if self.action in ("update", "partial_update", "destroy"):
+            return self.queryset.filter(author=self.request.user)
         return self.queryset.order_by("-date")
-
-
-class PostLikeAPIView(PostAPIView):
-
-    def get_queryset(self):
-        return self.queryset.filter(post_like__user=self.request.user).order_by("-date")
-
-
-class UserPostViewSet(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
-    serializer_class = PostSerializer
-
-    def get_queryset(self):
-        return self.queryset.filter(author=self.request.user)
 
     def get_serializer_context(self):
         return {"user": self.request.user}
 
 
+class PostLikeViewSet(PostViewSet):
+    http_method_names = ["get"]
+
+    def get_queryset(self):
+        return self.queryset.filter(post_like__user=self.request.user).order_by("-date")
+
+
 class LikesAPIView(generics.CreateAPIView):
-    queryset = PostLikes.objects.all()
+    queryset = PostLike.objects.all()
     serializer_class = LikePostSerializer
 
     def perform_create(self, serializer) -> None:

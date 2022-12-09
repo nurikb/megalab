@@ -36,7 +36,7 @@ class Post(models.Model):
         return f"{self.id}"
 
 
-class PostLikes(models.Model):
+class PostLike(models.Model):
     user = models.ForeignKey(
         AUTH_USER_MODEL,
         related_name="user_like",
