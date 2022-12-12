@@ -1,6 +1,7 @@
 from django.db import models
 
 from core.settings import AUTH_USER_MODEL
+from users.validators import validate_file_size
 
 
 class Tag(models.Model):
@@ -29,6 +30,7 @@ class Post(models.Model):
         upload_to="post_image",
         verbose_name="Картина",
         null=True,
+        validators=[validate_file_size],
     )
     text = models.TextField()
 
