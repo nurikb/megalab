@@ -6,7 +6,7 @@ def validate_file_size(value):
 
     if filesize > 1000:
         raise ValidationError(
-            "msg: The maximum file size that can be uploaded is 2MB"
+            "msg: The maximum file size that can be uploaded is 1MB"
         )
     else:
         return value
