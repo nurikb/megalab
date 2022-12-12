@@ -5,10 +5,11 @@ from django.utils.translation import gettext_lazy as _
 class CustomUserManager(BaseUserManager):
     def create_user(self, password, **extra_fields):
         for field, value in extra_fields.items():
-            if value is None:
-                raise TypeError("Users must have a {field}").format(
+            if value is None and field != 'profile_image':
+                print(value, field)
+                raise TypeError("Users must have a {field}".format(
                     field=field
-                )
+                ))
         user = self.model(**extra_fields)
         user.set_password(password)
 

@@ -29,6 +29,11 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_serializer_context(self):
         return {"user": self.request.user}
 
+    def get_queryset(self):
+        if self.action in ("update", "partial_update", "destroy"):
+            return self.queryset.filter(author=self.request.user)
+        return self.queryset
+
 
 class LikesAPIView(APIView):
     queryset = PostLike.objects.all()
