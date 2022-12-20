@@ -4,8 +4,6 @@ from rest_framework.routers import DefaultRouter
 from users.views import RegistrationAPIView, LoginAPIView, UserAPIView
 
 router = DefaultRouter()
-# router.register('user', RegistrationViewSet)
-
 
 urlpatterns = [
     path('registration/', RegistrationAPIView.as_view(), name='api_token_auth'),

@@ -6,7 +6,6 @@ class CustomUserManager(BaseUserManager):
     def create_user(self, password, **extra_fields):
         for field, value in extra_fields.items():
             if value is None and field != 'profile_image':
-                print(value, field)
                 raise TypeError("Users must have a {field}".format(
                     field=field
                 ))

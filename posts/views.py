@@ -24,7 +24,7 @@ class PostViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if self.action in ("update", "partial_update", "destroy"):
             return self.queryset.filter(author=self.request.user)
-        return self.queryset.order_by("-date")
+        return self.queryset
 
     def get_serializer_context(self):
         return {"user": self.request.user}
@@ -40,7 +40,7 @@ class LikesAPIView(APIView):
     serializer_class = LikePostSerializer
 
     def get(self, request):
-        like_post = Post.objects.filter(post_like__user=self.request.user).order_by("-date")
+        like_post = Post.objects.filter(post_like__user=self.request.user)
         serializer = PostSerializer(like_post, many=True, context={"user": request.user})
         return Response(serializer.data)
 

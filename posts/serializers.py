@@ -32,7 +32,7 @@ class CommentSerializer(serializers.ModelSerializer):
         return value
 
     def get_child(self, obj):
-        child = Comment.objects.filter(parent=obj).order_by("date")
+        child = Comment.objects.filter(parent=obj)
         return ChildCommentSerializer(instance=child, many=True).data
 
     def create(self, validated_data):
@@ -70,7 +70,7 @@ class PostSerializer(serializers.ModelSerializer):
         return PostLike.objects.filter(user=user, post=obj).exists()
 
     def get_comment(self, obj):
-        comment = Comment.objects.filter(parent=None, post=obj).order_by("date")
+        comment = Comment.objects.filter(parent=None, post=obj)
         return CommentSerializer(instance=comment, many=True).data
 
     def create(self, validated_data):

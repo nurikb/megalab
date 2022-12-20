@@ -3,8 +3,12 @@ import django_filters
 from posts.models import Post
 
 
+class CharInFilter(django_filters.BaseInFilter, django_filters.CharFilter):
+    pass
+
+
 class PostFilterSet(django_filters.FilterSet):
-    tag = django_filters.CharFilter(field_name='tag', lookup_expr='name')
+    tag = CharInFilter(field_name="tag__name", lookup_expr="in")
     author = django_filters.NumberFilter(field_name='author')
 
     class Meta:
