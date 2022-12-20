@@ -49,7 +49,9 @@ class LikesAPIView(APIView):
         data.update({"user": request.user.id})
         serializer = LikePostSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            post, is_created = PostLike.objects.get_or_create(**serializer.validated_data)
+            if not is_created:
+                post.delete()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

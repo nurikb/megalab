@@ -62,7 +62,8 @@ class PostSerializer(serializers.ModelSerializer):
             "text",
             "image",
             "is_liked",
-            "comment"
+            "comment",
+            "short_desc"
         )
 
     def get_is_liked(self, obj):

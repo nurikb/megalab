@@ -33,6 +33,7 @@ class Post(models.Model):
         validators=[validate_file_size],
     )
     text = models.TextField()
+    short_desc = models.CharField(max_length=300, null=True)
 
     class Meta:
         ordering = ["-date"]
