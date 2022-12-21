@@ -52,6 +52,7 @@ class PostSerializer(serializers.ModelSerializer):
     tag = serializers.CharField(source="tag.name")
     is_liked = serializers.SerializerMethodField(read_only=True)
     comment = serializers.SerializerMethodField()
+    author = serializers.CharField(source="author.nickname", read_only=True)
 
     class Meta:
         model = Post
@@ -63,7 +64,8 @@ class PostSerializer(serializers.ModelSerializer):
             "image",
             "is_liked",
             "comment",
-            "short_desc"
+            "short_desc",
+            "author"
         )
 
     def get_is_liked(self, obj):
