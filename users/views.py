@@ -40,6 +40,12 @@ class LoginAPIView(APIView):
         return Response({'token': token.key})
 
 
+class LogoutAPIView(APIView):
+    def get(self, request, format=None):
+        request.user.auth_token.delete()
+        return Response(status=status.HTTP_200_OK)
+
+
 class UserAPIView(APIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
